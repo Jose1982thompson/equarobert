@@ -123,11 +123,11 @@ def main(page: Page):
             if opcao == 1:
                 exibir_home(nome)
             elif opcao == 2:
-                exibir_menu_principal(nome)
+                exibir_menu_principal(nome)  # Corrigido para chamar a função correta
             elif opcao == 3:
                 exibir_settings(nome)
             elif opcao == 4:
-                exibir_texto("Info", nome)
+                exibir_info(nome)  # Corrigido para chamar a função correta
             elif opcao == 5:
                 page.clean()
                 page.add(Text("Saindo do programa.", size=30))
@@ -155,116 +155,40 @@ def main(page: Page):
         )
         page.update()
 
-    def exibir_texto(texto, nome, imagem=None):
+    def exibir_home(nome):
         page.clean()
-        column_controls = [Text(texto, size=20, color="white")]
-        
-        # Adiciona a imagem se fornecida
-        if imagem:
-            column_controls.append(Image(
-                src=imagem,  # Caminho para a imagem
-                fit="cover",
-                width=736,
-                height=414,
-            ))
+        menu_lateral(nome)  # Certifique-se de que o menu lateral é exibido corretamente
+        page.update()
 
-        column_controls.append(ElevatedButton("Voltar", on_click=lambda e: exibir_menu_principal(nome)))
-        
+    def exibir_menu_principal(nome):
+        # Função de exibição do menu principal (substitua com o conteúdo desejado)
+        page.clean()
         page.add(
             Column(
                 alignment="center",
                 horizontal_alignment="center",
-                controls=column_controls
+                controls=[
+                    Text(f"Bem-vindo ao Menu, {nome}", size=30, color="white"),
+                    ElevatedButton("Voltar", on_click=lambda e: exibir_home(nome)),
+                ]
             )
         )
         page.update()
 
-    def exercise_page(nome):
+    def exibir_info(nome):
+        # Função de exibição da página "Info"
         page.clean()
-
-        # Título e instruções do exercício
-        exercise_title = Text(value="Calcule as raízes da equação x² - 5x + 6", size=20, color='white')
-        instructions = Text(value="\nDetermine os coeficientes 'a', 'b' e 'c' da equação:", size=16, color='white')
-
-        # Campos de entrada
-        coef_a = TextField(label="Coeficiente 'a'", width=200)
-        coef_b = TextField(label="Coeficiente 'b'", width=200)
-        coef_c = TextField(label="Coeficiente 'c'", width=200)
-        delta_input = TextField(label="Valor do discriminante (Δ)", width=200)
-        x1_input = TextField(label="Valor de x1", width=200)
-        x2_input = TextField(label="Valor de x2", width=200)
-        feedback = Text(value="", size=16, color='red')
-
-        # Respostas corretas
-        correct_a = "1"
-        correct_b = "-5"
-        correct_c = "6"
-        correct_delta = "1"
-        correct_x1 = "3"
-        correct_x2 = "2"
-
-        # Função para verificar se os valores são numéricos
-        def is_numeric(value):
-            try:
-                float(value)  # Tenta converter para float
-                return True
-            except ValueError:
-                return False
-
-        # Função para verificar as respostas
-        def check_answers(e):
-            # Verificar se todos os valores inseridos são numéricos
-            if not is_numeric(coef_a.value) or not is_numeric(coef_b.value) or not is_numeric(coef_c.value):
-                feedback.value = "Por favor, insira apenas números nos coeficientes."
-            elif not is_numeric(delta_input.value) or not is_numeric(x1_input.value) or not is_numeric(x2_input.value):
-                feedback.value = "Por favor, insira apenas números no discriminante e nas raízes."
-            elif coef_a.value != correct_a:
-                feedback.value = "Coeficiente 'a' incorreto. Lembre-se que o sinal acompanha os coeficientes. Tente novamente."
-            elif coef_b.value != correct_b:
-                feedback.value = "Coeficiente 'b' incorreto. Lembre-se que o sinal acompanha os coeficientes. Tente novamente."
-            elif coef_c.value != correct_c:
-                feedback.value = "Coeficiente 'c' incorreto. Lembre-se que o sinal acompanha os coeficientes. Tente novamente."
-            elif delta_input.value != correct_delta:
-                feedback.value = "Valor do discriminante (Δ) incorreto. Lembre-se que Δ = b² - 4ac. Tente novamente."
-            elif (x1_input.value != correct_x1 and x1_input.value != correct_x2) or (x2_input.value != correct_x2 and x2_input.value != correct_x1):
-                feedback.value = "Valores de x1 ou x2 incorretos. Lembre-se que x1 = (-b + √Δ) / 2a e x2 = (-b - √Δ) / 2a. Tente novamente."
-            else:
-                feedback.value = "Você acertou as raízes."
-
-            # Atualizar a página para exibir o feedback
-            page.update()
-
-        # Botões de verificação e voltar
-        check_button = ElevatedButton(text="Verificar Respostas", on_click=check_answers)
-        back_button = ElevatedButton(text="Voltar", on_click=lambda e: exibir_menu_principal(nome))
-
-        # Adicionar todos os elementos à página
         page.add(
             Column(
-                controls=[
-                    exercise_title,
-                    instructions,
-                    coef_a,
-                    coef_b,
-                    coef_c,
-                    delta_input,
-                    x1_input,
-                    x2_input,
-                    check_button,
-                    feedback,
-                    back_button
-                ],
                 alignment="center",
-                horizontal_alignment="center"
+                horizontal_alignment="center",
+                controls=[
+                    Text(f"Informações do sistema, {nome}", size=30, color="white"),
+                    ElevatedButton("Voltar", on_click=lambda e: exibir_home(nome)),
+                ]
             )
         )
-
-        # Atualizar a página
         page.update()
-
-    def exibir_home(nome):
-        page.clean()  # Limpar a tela antes de exibir a home para evitar que a tela anterior apareça
-        menu_lateral(nome)  # Recarregar o layout com o menu lateral
 
     def exibir_settings(nome):
         def atualizar_imagem(src):
