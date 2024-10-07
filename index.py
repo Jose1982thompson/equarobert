@@ -1,4 +1,3 @@
-import os
 import flet
 from flet import *
 
@@ -123,11 +122,11 @@ def main(page: Page):
             if opcao == 1:
                 exibir_home(nome)
             elif opcao == 2:
-                exibir_menu_principal(nome)  # Corrigido para chamar a função correta
+                exibir_menu_exercicio(nome)  # Exibe o exercício aqui
             elif opcao == 3:
                 exibir_settings(nome)
             elif opcao == 4:
-                exibir_info(nome)  # Corrigido para chamar a função correta
+                exibir_info(nome)
             elif opcao == 5:
                 page.clean()
                 page.add(Text("Saindo do programa.", size=30))
@@ -157,26 +156,86 @@ def main(page: Page):
 
     def exibir_home(nome):
         page.clean()
-        menu_lateral(nome)  # Certifique-se de que o menu lateral é exibido corretamente
+        menu_lateral(nome)
         page.update()
 
-    def exibir_menu_principal(nome):
-        # Função de exibição do menu principal (substitua com o conteúdo desejado)
+    def exibir_menu_exercicio(nome):
+        # Título e instruções do exercício
+        exercise_title = Text(value="Calcule as raízes da equação x² - 5x + 6", size=20, color='white')
+        instructions = Text(value="\nDetermine os coeficientes 'a', 'b' e 'c' da equação:", size=16, color='white')
+
+        # Campos de entrada
+        coef_a = TextField(label="Coeficiente 'a'", width=200)
+        coef_b = TextField(label="Coeficiente 'b'", width=200)
+        coef_c = TextField(label="Coeficiente 'c'", width=200)
+        delta_input = TextField(label="Valor do discriminante (Δ)", width=200)
+        x1_input = TextField(label="Valor de x1", width=200)
+        x2_input = TextField(label="Valor de x2", width=200)
+
+        feedback = Text(value="", size=16, color='red')
+
+        # Respostas corretas
+        correct_a = "1"
+        correct_b = "-5"
+        correct_c = "6"
+        correct_delta = "1"
+        correct_x1 = "3"
+        correct_x2 = "2"
+
+        # Função para verificar se os valores são numéricos
+        def is_numeric(value):
+            try:
+                float(value)  # Tenta converter para float
+                return True
+            except ValueError:
+                return False
+
+        # Função para verificar as respostas
+        def check_answers(e):
+            # Verificar se todos os valores inseridos são numéricos
+            if not is_numeric(coef_a.value) or not is_numeric(coef_b.value) or not is_numeric(coef_c.value):
+                feedback.value = "Por favor, insira apenas números nos coeficientes."
+            elif not is_numeric(delta_input.value) or not is_numeric(x1_input.value) or not is_numeric(x2_input.value):
+                feedback.value = "Por favor, insira apenas números no discriminante e nas raízes."
+            elif coef_a.value != correct_a:
+                feedback.value = "Coeficiente 'a' incorreto. Lembre-se que o sinal acompanha os coeficientes. Tente novamente."
+            elif coef_b.value != correct_b:
+                feedback.value = "Coeficiente 'b' incorreto. Lembre-se que o sinal acompanha os coeficientes. Tente novamente."
+            elif coef_c.value != correct_c:
+                feedback.value = "Coeficiente 'c' incorreto. Lembre-se que o sinal acompanha os coeficientes. Tente novamente."
+            elif delta_input.value != correct_delta:
+                feedback.value = "Valor do discriminante (Δ) incorreto. Lembre-se que Δ = b² - 4ac. Tente novamente."
+            elif (x1_input.value != correct_x1 and x1_input.value != correct_x2) or (x2_input.value != correct_x2 and x2_input.value != correct_x1):
+                feedback.value = "Valores de x1 ou x2 incorretos. Lembre-se que x1 = (-b + √Δ) / 2a e x2 = (-b - √Δ) / 2a. Tente novamente."
+            else:
+                feedback.value = "Você acertou as raízes."
+
+            # Atualizar a página para exibir o feedback
+            page.update()
+
         page.clean()
         page.add(
             Column(
                 alignment="center",
                 horizontal_alignment="center",
                 controls=[
-                    Text(f"Bem-vindo ao Menu, {nome}", size=30, color="white"),
-                    ElevatedButton("Voltar", on_click=lambda e: exibir_home(nome)),
+                    exercise_title,
+                    instructions,
+                    coef_a,
+                    coef_b,
+                    coef_c,
+                    delta_input,
+                    x1_input,
+                    x2_input,
+                    ElevatedButton("Verificar Respostas", on_click=check_answers),
+                    feedback,
+                    ElevatedButton("Voltar", on_click=lambda e: exibir_home(nome))
                 ]
             )
         )
         page.update()
 
     def exibir_info(nome):
-        # Função de exibição da página "Info"
         page.clean()
         page.add(
             Column(
@@ -207,47 +266,47 @@ def main(page: Page):
                 height=50,
                 bgcolor=cor,
                 border_radius=25,
-                on_click=lambda e: mudar_cor_de_fundo(cor)
+                on_click=lambda e: mudar_cor_de_fundo(cor),
             )
 
         page.clean()
         page.add(
             Column(
-                controls=[
-                    Text("Escolha uma imagem de perfil", size=20, color="white"),
-                    Row(
-                        controls=[
-                            ElevatedButton("Avatar 1", on_click=lambda e: atualizar_imagem("imagens/perfil1.png")),
-                            ElevatedButton("Avatar 2", on_click=lambda e: atualizar_imagem("imagens/perfil2.png")),
-                        ]
-                    ),
-                    Text("Escolha uma cor de fundo", size=20, color="white"),
-                    Row(
-                        controls=[
-                            criar_seletor_cor("black"),
-                            criar_seletor_cor("white"),
-                            criar_seletor_cor("green"),
-                            criar_seletor_cor("blue"),
-                            criar_seletor_cor("red"),
-                        ]
-                    ),
-                    ElevatedButton("Voltar", on_click=lambda e: exibir_home(nome)),
-                ],
                 alignment="center",
                 horizontal_alignment="center",
+                controls=[
+                    Text("Configurações", size=30, color="white"),
+                    Row(
+                        controls=[
+                            criar_seletor_cor("blue"),
+                            criar_seletor_cor("green"),
+                            criar_seletor_cor("red"),
+                        ],
+                        alignment="center",
+                    ),
+                    Text("Escolha uma imagem de perfil:", size=20, color="white"),
+                    Row(
+                        controls=[
+                            Image(src="https://via.placeholder.com/50", on_click=lambda e: atualizar_imagem("https://via.placeholder.com/50")),
+                            Image(src="https://via.placeholder.com/50", on_click=lambda e: atualizar_imagem("https://via.placeholder.com/50")),
+                        ],
+                        alignment="center",
+                    ),
+                    ElevatedButton("Voltar", on_click=lambda e: exibir_home(nome)),
+                ]
             )
         )
         page.update()
 
-    entrada_nome = TextField(label="Nome", width=300)
-    entrada_senha = TextField(label="Senha", password=True, width=300)
+    entrada_nome = TextField(label="Nome", width=200)
+    entrada_senha = TextField(label="Senha", password=True, width=200)
 
     page.add(
         Column(
             alignment="center",
             horizontal_alignment="center",
             controls=[
-                Text("Login", size=40, color="white"),
+                Text("Login", size=30, color="white"),
                 entrada_nome,
                 entrada_senha,
                 ElevatedButton("Entrar", on_click=login),
