@@ -252,12 +252,13 @@ def main(page: Page):
         nonlocal selected_image  # Permite modificar a variável global
 
         def atualizar_imagem(src):
+            nonlocal selected_image
             selected_image = src
             exibir_home(nome)  # Voltar para a tela principal com o avatar atualizado
 
         def mudar_cor_de_fundo(cor):
             page.bgcolor = cor
-            exibir_home(nome)
+            page.update()
 
         def criar_seletor_cor(cor):
             return Container(
@@ -275,6 +276,7 @@ def main(page: Page):
                 horizontal_alignment="center",
                 controls=[
                     Text("Configurações", size=30, color="white"),
+                    Text("Escolha uma cor de fundo:", size=20, color="white"),
                     Row(
                         controls=[
                             criar_seletor_cor("blue"),
@@ -314,3 +316,4 @@ def main(page: Page):
     )
 
 flet.app(target=main)
+
