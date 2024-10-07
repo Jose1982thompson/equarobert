@@ -98,6 +98,7 @@ def main(page: Page):
     page.horizontal_alignment = 'center'
     page.vertical_alignment = 'center'
 
+    # Variável global de imagem selecionada
     selected_image = None
 
     def login(e):
@@ -122,7 +123,7 @@ def main(page: Page):
             if opcao == 1:
                 exibir_home(nome)
             elif opcao == 2:
-                exibir_menu_exercicio(nome)  # Exibe o exercício aqui
+                exibir_menu_exercicio(nome)
             elif opcao == 3:
                 exibir_settings(nome)
             elif opcao == 4:
@@ -192,25 +193,23 @@ def main(page: Page):
 
         # Função para verificar as respostas
         def check_answers(e):
-            # Verificar se todos os valores inseridos são numéricos
             if not is_numeric(coef_a.value) or not is_numeric(coef_b.value) or not is_numeric(coef_c.value):
                 feedback.value = "Por favor, insira apenas números nos coeficientes."
             elif not is_numeric(delta_input.value) or not is_numeric(x1_input.value) or not is_numeric(x2_input.value):
                 feedback.value = "Por favor, insira apenas números no discriminante e nas raízes."
             elif coef_a.value != correct_a:
-                feedback.value = "Coeficiente 'a' incorreto. Lembre-se que o sinal acompanha os coeficientes. Tente novamente."
+                feedback.value = "Coeficiente 'a' incorreto. Tente novamente."
             elif coef_b.value != correct_b:
-                feedback.value = "Coeficiente 'b' incorreto. Lembre-se que o sinal acompanha os coeficientes. Tente novamente."
+                feedback.value = "Coeficiente 'b' incorreto. Tente novamente."
             elif coef_c.value != correct_c:
-                feedback.value = "Coeficiente 'c' incorreto. Lembre-se que o sinal acompanha os coeficientes. Tente novamente."
+                feedback.value = "Coeficiente 'c' incorreto. Tente novamente."
             elif delta_input.value != correct_delta:
-                feedback.value = "Valor do discriminante (Δ) incorreto. Lembre-se que Δ = b² - 4ac. Tente novamente."
+                feedback.value = "Valor do discriminante (Δ) incorreto. Tente novamente."
             elif (x1_input.value != correct_x1 and x1_input.value != correct_x2) or (x2_input.value != correct_x2 and x2_input.value != correct_x1):
-                feedback.value = "Valores de x1 ou x2 incorretos. Lembre-se que x1 = (-b + √Δ) / 2a e x2 = (-b - √Δ) / 2a. Tente novamente."
+                feedback.value = "Valores de x1 ou x2 incorretos. Tente novamente."
             else:
                 feedback.value = "Você acertou as raízes."
 
-            # Atualizar a página para exibir o feedback
             page.update()
 
         page.clean()
@@ -250,8 +249,9 @@ def main(page: Page):
         page.update()
 
     def exibir_settings(nome):
+        nonlocal selected_image  # Permite modificar a variável global
+
         def atualizar_imagem(src):
-            nonlocal selected_image
             selected_image = src
             exibir_home(nome)  # Voltar para a tela principal com o avatar atualizado
 
@@ -259,7 +259,6 @@ def main(page: Page):
             page.bgcolor = cor
             exibir_home(nome)
 
-        # Funções auxiliares para os botões de seleção
         def criar_seletor_cor(cor):
             return Container(
                 width=50,
